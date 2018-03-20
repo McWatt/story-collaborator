@@ -30,6 +30,7 @@ class AddStory extends Component {
         console.log(id);
         this.props.dispatch(addStory({
             [id]: {
+                id,
                 title: this.state.title,
                 content: this.state.content
             }
