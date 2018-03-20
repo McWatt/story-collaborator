@@ -7,7 +7,7 @@ class Story extends Component {
         return (
             <div>
                 <header>
-                    <h1>{this.props.story.title}</h1>
+                    <h1>Edit: {this.props.story.title}</h1>
                     <p>{this.props.story.content}</p>
                 </header>
             </div>
@@ -17,7 +17,7 @@ class Story extends Component {
 
 function mapStateToProps(state, props) {
     return {
-        story: state.stories[props.match.params.id]
+        story: state.stories[1234] // temp
     };
 }
 

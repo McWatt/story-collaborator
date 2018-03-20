@@ -10,19 +10,22 @@ import registerServiceWorker from './registerServiceWorker';
 const initState = {
     user: {
         name: 'erik.phipps',
-        favoriteColor: 'blue',
-        createdStories: [1234, 1235, 1236]
+        createdStories: [1234, 1235, 1236],
+        collaboratedStories: [1237, 1238, 1239]
     },
     stories: {
         1234: {
+            id: 1234,
             title: 'Vegas 2016',
             content: 'asldf jlsdafj lsdfjls djflk sdjflsk ajflk sjlsk djfsjf ',
         },
         1235: {
+            id: 1235,
             title: 'The desert party yeah',
             content: 'alskfjlds ajflkds jfks lsajfl flsdj flsad lsdjl sjdls ls flsdj lsj flj flj flsaj'
         },
         1236: {
+            id: 1236,
             title: 'That time when so and so did that thing',
             content: 'a asfh gyjy dhfnygjoit ghjopuy bjvbfgb lsaj'
         }

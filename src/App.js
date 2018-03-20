@@ -4,9 +4,9 @@ import './App.css';
 import User from './components/user';
 import Nav from './components/nav';
 import StoryList from './components/storyList';
+import Story from './components/story';
+import StoryEdit from './components/storyEdit';
 import styled from 'styled-components';
-
-
 import AddStory from './components/AddStory';
 
 const ContentContainer = styled.section`
@@ -32,7 +32,9 @@ class App extends Component {
             </header>
             <Nav />
             <ContentContainer>
-              <Route path="/stories" component={StoryList} />
+              <Route exact path="/stories" component={StoryList} />
+              <Route exact path="/stories/:id" component={Story} />
+              <Route exact path="/stories/:id/edit" component={StoryEdit} />
               <Route path="/add-story" component={Add} />
             </ContentContainer>
           </div>
