@@ -27,7 +27,7 @@ class AddStory extends Component {
 
     handleSubmit(event) {
         const id = new Date().valueOf();
-        console.log(id);
+        
         this.props.dispatch(addStory({
             [id]: {
                 id,
@@ -38,8 +38,6 @@ class AddStory extends Component {
 
         event.preventDefault();
     }
-
-
 
     render() {
         const { title, content } = this.state;
