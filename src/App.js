@@ -7,7 +7,7 @@ import StoryList from './components/storyList';
 import Story from './components/story';
 import StoryEdit from './components/storyEdit';
 import styled from 'styled-components';
-import AddStory from './components/AddStory';
+import AddStory from './components/addStory';
 
 const ContentContainer = styled.section`
   padding: 1em;
