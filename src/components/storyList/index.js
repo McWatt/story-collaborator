@@ -2,6 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+// reducer
+export const stories = (state = {}, action) => {
+    switch (action.type) {
+        case 'ADD_STORY':
+            return Object.assign({}, state, action.payload);
+        default:
+            return state;
+    }
+}
+
 class Stories extends Component {
 
     render() {

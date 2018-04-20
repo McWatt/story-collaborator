@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-
 class Story extends Component {
     render() {
         return (
@@ -17,7 +16,7 @@ class Story extends Component {
 
 function mapStateToProps(state, props) {
     return {
-        story: state.stories[1234] // temp
+        story: state.stories[props.match.params.id]
     };
 }
 

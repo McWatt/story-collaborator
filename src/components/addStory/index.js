@@ -2,6 +2,20 @@ import React, { Component } from 'react';
 import Button from '../~library/Button';
 import { connect } from 'react-redux';
 
+/*
+
+{
+    type: 'ADD_STORY',
+    payload: {
+        1236: {
+            title: 'asdfsadf',
+            content: 'aasdfsdf'
+        }
+    }
+}
+
+*/
+
 function addStory(data) {
     return {
         type: 'ADD_STORY',

@@ -2,6 +2,7 @@
   "name": "story-collaborator",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3009/",
   "dependencies": {
     "node-json-db": "^0.7.5",
     "prop-types": "^15.6.1",
