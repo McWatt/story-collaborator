@@ -19,7 +19,7 @@ const initState = {
 initState.user = Object.assign(initState.user, loginStatus());
 
 export default new Promise((resolve, reject) => {
-    fetch('/stories')
+    fetch('/api/v1/stories')
         .then(response => {
             return response.json();
         })
@@ -35,6 +35,10 @@ export default new Promise((resolve, reject) => {
                 }
                 return acc;
             }, {});
+
+            initState.storyList = {
+                ids: Object.keys(initState.stories)
+            }
 
             resolve(initState);
         });

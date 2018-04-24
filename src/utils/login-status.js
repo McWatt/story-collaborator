@@ -1,8 +1,7 @@
 export default () => {
     return {
         name: 'erik.phipps',
-        id: 8765765,
-        token: '5965827349823758943675825658695239'
+        id: '5ad8cdf7095b735f2125069e'
     };
     // return {
     //     name: 'Guest',

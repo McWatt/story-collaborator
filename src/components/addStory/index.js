@@ -1,27 +1,7 @@
 import React, { Component } from 'react';
 import Button from '../~library/Button';
 import { connect } from 'react-redux';
-
-/*
-
-{
-    type: 'ADD_STORY',
-    payload: {
-        1236: {
-            title: 'asdfsadf',
-            content: 'aasdfsdf'
-        }
-    }
-}
-
-*/
-
-function addStory(data) {
-    return {
-        type: 'ADD_STORY',
-        payload: data
-    }
-}
+import { apiCreateStory } from '../../api';
 
 class AddStory extends Component {
     constructor(props) {
@@ -40,14 +20,11 @@ class AddStory extends Component {
     }
 
     handleSubmit(event) {
-        const id = new Date().valueOf();
+        // const id = new Date().valueOf();
         
-        this.props.dispatch(addStory({
-            [id]: {
-                id,
-                title: this.state.title,
-                content: this.state.content
-            }
+        this.props.dispatch(apiCreateStory({
+            title: this.state.title,
+            content: this.state.content
         }));
 
         event.preventDefault();
@@ -81,20 +58,10 @@ class AddStory extends Component {
     }
 }
 
-
-/*
-dispatch this:
-
-{
-type: 'ADD_STORY',
-payload: {
-1236: {
-    title: 'asdfsadf',
-    content: 'aasdfsdf'
+const mapPropsToState = (state, props) => {
+    return {
+        id: state.user.id
+    }
 }
-}
-}
- 
-*/
 
-export default connect()(AddStory);
+export default connect(mapPropsToState)(AddStory);
