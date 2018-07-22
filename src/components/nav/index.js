@@ -5,10 +5,7 @@ import PropTypes from 'prop-types';
 import Navigation from '../~library/Navigation';
 
 class Nav extends Component {
-    static propTypes = {
-        location: PropTypes.object.isRequired
-    }
-    
+   
     render() {
         const { location } = this.props;
         
@@ -28,6 +25,10 @@ class Nav extends Component {
             </Navigation>
         )
     }
+}
+
+Nav.propTypes = {
+    location: PropTypes.object.isRequired
 }
 
 const NavWithRouter = withRouter(Nav);
