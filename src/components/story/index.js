@@ -4,11 +4,17 @@ import { connect } from 'react-redux';
 
 class Story extends Component {
     render() {
+        const content = this.props.story.content.map((item, idx) => {
+            return (
+                <p key={idx}>{item}</p>
+            );
+        });
         return (
             <div>
                 <header>
                     <h1>{this.props.story.title}</h1>
-                    <p>{this.props.story.content}</p>
+                    <div>{this.props.story.description}</div>
+                    {content}
                 </header>
             </div>
         );

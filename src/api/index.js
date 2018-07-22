@@ -53,6 +53,27 @@ export function apiCallToCreateStory(data) {
     });
 }
 
+export function apiCallToUpdateStory(data) {
+    return new Promise((resolve, reject) => {
+        const headers = new Headers({
+            'Content-Type': 'application/json'
+        });
+        
+        fetch(`/api/v1/stories/${data.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: headers
+        })
+            .then(res => res.json())
+            .catch(error => {
+                console.log(error);
+            })
+            .then(response => {
+                resolve(Object.assign(response, {id: response._id}));
+            });
+    });
+}
+
 export function apiCallToDeleteStory(id) {
     return new Promise((resolve, reject) => {
         fetch(`/api/v1/stories/${id}`, {
@@ -63,7 +84,6 @@ export function apiCallToDeleteStory(id) {
                 console.log(error);
             })
             .then(response => {
-                // this is not working, needs to be in the generator
                 resolve(response);
             });
     });

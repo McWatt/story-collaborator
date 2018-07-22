@@ -1,9 +1,15 @@
 import { takeEvery, call, put, select } from 'redux-saga/effects';
-import { addStory as addStoryToStore, deleteStory as deleteStoryFromStore } from './stores/stories';
-import { removeStory, addStory } from './components/storyList';
+import {
+    addStory as addStoryToStore,
+    updateStory as updateStoryInStore,
+    deleteStory as deleteStoryFromStore,
+} from './stores/stories';
+import { removeStory } from './components/storyList';
 import {
     API_CREATE_STORY,
     apiCallToCreateStory,
+    apiCallToUpdateStory,
+    API_UPDATE_STORY,
     API_DELETE_STORY,
     apiCallToDeleteStory
 } from './api';
@@ -15,19 +21,25 @@ function* createStory(action) {
         const id = yield select(getUserId);
         const response = yield call(apiCallToCreateStory, Object.assign(action.payload, { author_id: id }));
         yield put(addStoryToStore(response, id));
-        yield put(addStory(id));
-        console.log('newly added story', response);
     } catch (error) {
         yield put({ type: 'CREATE_STORY_SUCCESS_FAILURE', error });
     }
 }
 
+function* updateStory(action) {
+    try {
+        const response = yield call(apiCallToUpdateStory, action.payload);
+        yield put(updateStoryInStore(response, action.payload.id));
+    } catch (error) {
+        yield put({ type: 'UPDATE_STORY_SUCCESS_FAILURE', error });
+    }
+}
+
 function* deleteStory(action) {
     try {
-        const response = yield call(apiCallToDeleteStory, action.payload);
+        yield call(apiCallToDeleteStory, action.payload);
         yield put(deleteStoryFromStore(action.payload));
         yield put(removeStory(action.payload));
-        console.log('newly deleted story', response);
     } catch (error) {
         yield put({ type: 'DELETE_STORY_SUCCESS_FAILURE', error });
     }
@@ -35,6 +47,7 @@ function* deleteStory(action) {
 
 export default function* rootSaga() {
     yield takeEvery(API_CREATE_STORY, createStory);
+    yield takeEvery(API_UPDATE_STORY, updateStory);
     yield takeEvery(API_DELETE_STORY, deleteStory);
 }
 

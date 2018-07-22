@@ -10,16 +10,11 @@ class Story extends Component {
     constructor(props) {
         super(props);
 
-        const {
-            title,
-            content,
-            description,
-        } = this.props.story;
+        const { title, content } = this.props.story;
 
         this.state = {
             content: content,
             title: title,
-            description: description,
             activeParagraph: 0,
         };
 
@@ -80,7 +75,7 @@ class Story extends Component {
 
         contentCopy.splice(index, 0, '');
 
-        this.setState(() => ({content: contentCopy}));
+        this.setState(() => ({ content: contentCopy }));
     }
 
     handleChange(event) {
@@ -92,24 +87,79 @@ class Story extends Component {
             title: this.state.title,
             content: this.state.content,
             id: this.props.story.id,
-            description: this.state.description,
         }));
+    }
+
+    componentDidUpdate() {
+        console.log('componentDidUpdate');
+
+        // if (this.shouldFocusParagraph) {
+        //     this.dom[`paragraphy-${this.state.activeParagraph}`].focus();
+        //     this.shouldFocusParagraph = false;
+        // }
+
     }
 
     componentDidMount() {
         this.titleInput.current.focus();
     }
-
+    /*
+        componentDidMount() {
+            console.group('componentDidMount');
+            console.log('invoked immediately after a component is mounted (inserted into the tree)');
+            console.log('Initialization that requires DOM nodes should go here.');
+            console.log('If you need to load data from a remote endpoint, this is a good place to instantiate the network request.');
+            console.log('This method is a good place to set up any subscriptions. If you do that, don’t forget to unsubscribe in componentWillUnmount().');
+            console.groupEnd();
+        }
+    
+        componentDidUpdate() {
+            console.log('componentDidUpdate');
+        }
+    
+        componentWillUnmount() {
+            console.log('componentWillUnmount');
+        }
+    
+        // Less used methods
+        // https://reactjs.org/docs/react-component.html#shouldcomponentupdate
+        shouldComponentUpdate(nextProps, nextState) {
+            console.group('shouldComponentUpdate');
+            console.log(nextProps, nextState);
+            console.groupEnd();
+            return true;
+        }
+    
+        // https://reactjs.org/docs/react-component.html#static-getderivedstatefromprops
+        getDerivedStateFromProps() {
+            console.log('getDerivedStateFromProps');
+        }
+    
+        // https://reactjs.org/docs/react-component.html#getsnapshotbeforeupdate
+        getSnapshotBeforeUpdate() {
+            console.log('getSnapshotBeforeUpdate');
+    
+            return null;
+        }
+    
+        // https://reactjs.org/docs/react-component.html#componentdidcatch
+        componentDidCatch(error, info) {
+            console.group('componentDidCatch');
+            console.log(error, info);
+            console.groupEnd();
+        }
+    */
     render() {
+        console.log(React);
         const paragraphs = this.state.content.map((item, idx) => {
             return (
-                <div key={idx}>
+                <div key={idx} >
                     <Textarea
                         data-key={idx}
                         onChange={this.handleContentChange}
                         onKeyDown={this.handleParagraphKeyUp}
                         value={item}
-                        innerRef={(input) => {this.dom[`paragraphy-${idx}`] = input}}
+                        innerRef={(input) => { this.dom[`paragraphy-${idx}`] = input }}
                         autoFocus={this.state.activeParagraph === idx ? true : false}
                     ></Textarea>
                     <Button
@@ -123,8 +173,9 @@ class Story extends Component {
 
         return (
             <div>
+                <MouseTracker />
                 <header>
-                    <h1>Edit: {this.props.story.title}</h1>
+                    <h1>Edit: </h1>
                     <TextInput
                         type='text'
                         name='title'
@@ -133,12 +184,6 @@ class Story extends Component {
                         innerRef={this.titleInput}
                     />
                 </header>
-                <Textarea
-                    name='description'
-                    onChange={this.handleChange}
-                    defaultValue={this.props.story.description}
-                />
-                <h2>The story</h2>
                 {paragraphs}
                 <Button
                     type="button"
@@ -154,10 +199,9 @@ class Story extends Component {
 }
 
 Story.propTypes = {
-    story: PropTypes.shape ({
+    story: PropTypes.shape({
         title: PropTypes.string,
-        content: PropTypes.arrayOf(PropTypes.string),
-        description: PropTypes.string
+        content: PropTypes.arrayOf(PropTypes.string)
     })
 }
 
@@ -168,3 +212,4 @@ function mapStateToProps(state, props) {
 }
 
 export default connect(mapStateToProps)(Story);
+

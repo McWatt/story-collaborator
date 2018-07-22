@@ -1,22 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import styled from 'styled-components';
 import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
-
-const Navigation = styled.nav`
-    background-color: lightgrey;
-
-    > ul {
-        margin: 0;
-        padding: 4px;
-
-        > li {
-            display: inline-block;
-            margin-right: 1em;
-        }
-    }
-`;
+import Navigation from '../~library/Navigation';
 
 class Nav extends Component {
     static propTypes = {

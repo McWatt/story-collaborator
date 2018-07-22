@@ -5,6 +5,7 @@ import Button from '../~library/Button';
 import { apiDeleteStory } from '../../api';
 
 
+
 export const ADD_STORY = 'StoryList/ADD_STORY';
 export const REMOVE_STORY = 'StoryList/REMOVE_STORY';
 
@@ -32,7 +33,6 @@ export const storyListReducer = (state = { ids: [] }, action) => {
             return Object.assign({}, state, {
                 ids: state.ids.filter(id => action.payload !== id)
             });
-            return 
         default:
             return state;
     }
@@ -45,18 +45,16 @@ class Stories extends Component {
     }
 
     render() {
-
+        
         const storyList = Object.values(this.props.stories).map((item, idx) => {
-            if (item) {
-                return (
-                    <li key={idx}>
-                        <h2>{item.title}</h2>
-                        <div>{item.content}</div>
-                        <Link to={`/stories/${item.id}`}>View</Link> | <Link to={`/stories/${item.id}/edit`}>Edit</Link> | 
-                        <Button type="button" onClick={this.handleDelete(item.id)}>Delete</Button>
-                    </li>
-                )
-            }
+		return (
+		    <li key={idx}>
+		        <h2>{item.title}</h2>
+		        <div>{item.description}</div>
+		        <Link to={`/stories/${item.id}`}>View</Link> | <Link to={`/stories/${item.id}/edit`}>Edit</Link> | 
+		        <Button type="button" onClick={this.handleDelete(item.id)}>Delete</Button>
+		    </li>
+		)
         });
 
         return (
@@ -72,7 +70,7 @@ class Stories extends Component {
     }
 }
 
-function mapStateToProps(state, props) {
+function mapStateToProps(state) {
     return {
         stories: state.storyList.ids.map(id => state.stories[id])
     };

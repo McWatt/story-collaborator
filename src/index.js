@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
@@ -30,8 +29,6 @@ getInitialState.then(initState => {
         </Provider>, document.getElementById('root'));
 
     registerServiceWorker();
-
-    console.log('initState', initState);
 
 }, err => {
     console.log('err', err);

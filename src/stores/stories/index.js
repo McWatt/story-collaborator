@@ -1,5 +1,3 @@
-import { select } from 'redux-saga/effects';
-
 // Stories
 export const ADD_STORY = 'Stories/ADD_STORY';
 export const UPDATE_STORY = 'Stories/UPDATE_STORY';

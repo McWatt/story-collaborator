@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Button from '../~library/Button';
+import Textarea from '../~library/Textarea';
+import TextInput from '../~library/TextInput';
 import { connect } from 'react-redux';
 import { apiCreateStory } from '../../api';
 
@@ -8,7 +10,7 @@ class AddStory extends Component {
         super(props);
         this.state = {
             title: '',
-            content: ''
+            description: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -20,25 +22,23 @@ class AddStory extends Component {
     }
 
     handleSubmit(event) {
-        // const id = new Date().valueOf();
-        
         this.props.dispatch(apiCreateStory({
             title: this.state.title,
-            content: this.state.content
+            description: this.state.description
         }));
 
         event.preventDefault();
     }
 
     render() {
-        const { title, content } = this.state;
-        const isValid = title.length > 0 && content.length > 0;
+        const { title, description } = this.state;
+        const isValid = title.length > 0 && description.length > 0;
 
         return (
             <form>
                 <label>
                     Title:
-                        <input
+                        <TextInput
                         name="title"
                         type="text"
                         value={this.state.title}
@@ -47,12 +47,12 @@ class AddStory extends Component {
                 <br />
                 <label>
                     Description:
-                    <textarea
-                        name="content"
-                        value={this.state.content}
+                    <Textarea
+                        name="description"
+                        value={this.state.description}
                         onChange={this.handleChange} />
                 </label>
-                <Button type="button" disabled={!isValid} onClick={this.handleSubmit}>Add</Button>
+                <Button type="button" disabled={!isValid} primary={!!isValid} onClick={this.handleSubmit}>Add</Button>
             </form>
         )
     }

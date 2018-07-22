@@ -31,7 +31,8 @@ export default new Promise((resolve, reject) => {
                 acc[item._id] = {
                     title: item.title,
                     content: item.content,
-                    id: item._id
+                    id: item._id,
+                    description: item.description,
                 }
                 return acc;
             }, {});
