@@ -23,9 +23,11 @@
     "test": "react-scripts test --env=jsdom",
     "test-update": "react-scripts test --env=jsdom --updateSnapshot",
     "eject": "react-scripts eject",
-    "precommit": "pretty-quick --staged"
+    "precommit": "pretty-quick --staged",
+    "flow": "flow"
   },
   "devDependencies": {
+    "flow-bin": "^0.86.0",
     "husky": "^0.14.3",
     "prettier": "1.13.7",
     "pretty-quick": "^1.6.0"
