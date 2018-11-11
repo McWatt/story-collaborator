@@ -4,7 +4,7 @@ import {
   updateStory as updateStoryInStore,
   deleteStory as deleteStoryFromStore
 } from "./stores/stories";
-import { removeStory } from "./components/storyList";
+import { addStory, removeStory } from "./components/storyList";
 import {
   API_CREATE_STORY,
   apiCallToCreateStory,
@@ -24,6 +24,7 @@ function* createStory(action) {
       Object.assign(action.payload, { author_id: id })
     );
     yield put(addStoryToStore(response, id));
+    yield put(addStory(id));
   } catch (error) {
     yield put({ type: "CREATE_STORY_SUCCESS_FAILURE", error });
   }
@@ -41,8 +42,9 @@ function* updateStory(action) {
 function* deleteStory(action) {
   try {
     yield call(apiCallToDeleteStory, action.payload);
-    yield put(deleteStoryFromStore(action.payload));
+    // must remove story from storyList first, then remove it from the store
     yield put(removeStory(action.payload));
+    yield put(deleteStoryFromStore(action.payload));
   } catch (error) {
     yield put({ type: "DELETE_STORY_SUCCESS_FAILURE", error });
   }
