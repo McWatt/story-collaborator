@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -7,7 +9,32 @@ import Textarea from "../~library/Textarea";
 import { apiUpdateStory } from "../../api";
 import { withRouter } from "react-router-dom";
 
-class Story extends Component {
+type Props = {
+  story: {
+    title: string,
+    content: Array<mixed>,
+    description: string,
+    id: string
+  },
+  dispatch: Function,
+  id: string,
+  history: Function
+};
+
+type State = {
+  content: Array<mixed>,
+  title: string,
+  description: string,
+  activeParagraph: number
+};
+
+class Story extends Component<Props, State> {
+  titleInput: {
+    current: null | HTMLInputElement
+  };
+  dom: {};
+  shouldFocusParagraph: boolean;
+
   constructor(props) {
     super(props);
 
@@ -20,14 +47,6 @@ class Story extends Component {
       activeParagraph: 0
     };
 
-    this.handleContentChange = this.handleContentChange.bind(this);
-    this.handleParagraphDelete = this.handleParagraphDelete.bind(this);
-    this.handleParagraphAdd = this.handleParagraphAdd.bind(this);
-    this.handleParagraphKeyUp = this.handleParagraphKeyUp.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
-
     this.titleInput = React.createRef();
 
     this.dom = {};
@@ -35,14 +54,14 @@ class Story extends Component {
     this.shouldFocusParagraph = false;
   }
 
-  handleContentChange(event) {
+  handleContentChange = (event: SyntheticEvent<HTMLInputElement>) => {
     let contentCopy = [...this.state.content];
 
     contentCopy[event.target.dataset.key] = event.target.value;
     this.setState({ content: contentCopy });
-  }
+  };
 
-  handleParagraphDelete(event) {
+  handleParagraphDelete = (event: SyntheticEvent<HTMLButtonElement>) => {
     let contentCopy = [...this.state.content];
 
     this.setState({
@@ -50,10 +69,10 @@ class Story extends Component {
         (item, index) => index !== Number(event.target.dataset.key)
       )
     });
-  }
+  };
 
-  handleParagraphKeyUp(event) {
-    const key = Number(event.target.dataset.key);
+  handleParagraphKeyUp = (event: SyntheticKeyboardEvent<*>) => {
+    const key = Number(event.currentTarget.dataset.key);
 
     if (event.keyCode === 13) {
       event.preventDefault();
@@ -71,11 +90,11 @@ class Story extends Component {
     } else {
       return false;
     }
-  }
+  };
 
-  handleParagraphAdd(event) {
+  handleParagraphAdd = (event: SyntheticEvent<HTMLButtonElement>) => {
     let contentCopy = [...this.state.content];
-    let key = Number(event.target.dataset.key);
+    let key = Number(event.currentTarget.dataset.key);
     let index =
       typeof key === "number" && !isNaN(key)
         ? key + 1
@@ -84,13 +103,13 @@ class Story extends Component {
     contentCopy.splice(index, 0, "");
 
     this.setState(() => ({ content: contentCopy }));
-  }
+  };
 
-  handleChange(event) {
+  handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
-  }
+  };
 
-  handleSubmit() {
+  handleSubmit = () => {
     this.props.dispatch(
       apiUpdateStory({
         title: this.state.title,
@@ -99,11 +118,11 @@ class Story extends Component {
         description: this.state.description
       })
     );
-  }
+  };
 
-  handleCancel() {
+  handleCancel = () => {
     this.props.history.push("/stories");
-  }
+  };
 
   componentDidMount() {
     this.titleInput.current.focus();

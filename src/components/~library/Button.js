@@ -4,8 +4,8 @@ import styled, { css } from "styled-components";
 import * as React from "react";
 
 type Props = {
-  primary: boolean,
-  disabled: boolean
+  primary?: boolean,
+  disabled?: boolean
 };
 
 const Button = (styled.button`
