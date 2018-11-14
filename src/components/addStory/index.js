@@ -27,14 +27,13 @@ class AddStory extends Component<Props, State> {
   };
 
   handleSubmit = (event: SyntheticEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     this.props.dispatch(
       apiCreateStory({
         title: this.state.title,
         description: this.state.description
       })
     );
-
-    event.preventDefault();
   };
 
   render() {
@@ -42,7 +41,7 @@ class AddStory extends Component<Props, State> {
     const isValid = title.length > 0 && description.length > 0;
 
     return (
-      <form>
+      <form id="js-story-add-form">
         <label>
           Title:
           <TextInput
@@ -62,7 +61,7 @@ class AddStory extends Component<Props, State> {
           />
         </label>
         <Button
-          type="button"
+          type="submit"
           disabled={!isValid}
           primary={!!isValid}
           onClick={this.handleSubmit}
