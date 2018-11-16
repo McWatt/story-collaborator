@@ -62,13 +62,11 @@ class Story extends Component<Props, State> {
   };
 
   handleParagraphDelete = (event: SyntheticEvent<HTMLButtonElement>) => {
-    let contentCopy = [...this.state.content];
+    let content = [...this.state.content];
+    const paragraphIndex = Number(event.target.dataset.key);
+    content.splice(paragraphIndex, 1);
 
-    this.setState({
-      content: contentCopy.filter(
-        (item, index) => index !== Number(event.target.dataset.key)
-      )
-    });
+    this.setState({ content });
   };
 
   handleParagraphKeyUp = (event: SyntheticKeyboardEvent<*>) => {
@@ -191,14 +189,6 @@ class Story extends Component<Props, State> {
     );
   }
 }
-
-Story.propTypes = {
-  story: PropTypes.shape({
-    title: PropTypes.string,
-    content: PropTypes.arrayOf(PropTypes.string),
-    description: PropTypes.string
-  })
-};
 
 function mapStateToProps(state, props) {
   return {
