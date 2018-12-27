@@ -38,7 +38,7 @@ export function apiCallToCreateStory(data) {
       "Content-Type": "application/json"
     });
 
-    fetch("/api/v1/stories", {
+    fetch("http://localhost:3009/api/v1/stories", {
       method: "POST",
       body: JSON.stringify(data),
       headers: headers
@@ -88,4 +88,28 @@ export function apiCallToDeleteStory(id) {
         resolve(response);
       });
   });
+}
+
+export function apiCallToAuthenticateUser(data) {
+  const headers = new Headers({
+    "Content-Type": "application/json"
+  });
+
+  return fetch("http://127.0.0.1:3009/api/v1/auth/sign_in", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers
+  }).then(res => res.json());
+}
+
+export function apiCallToRegisterUser(data) {
+  const headers = new Headers({
+    "Content-Type": "application/json"
+  });
+
+  return fetch("http://127.0.0.1:3009/api/v1/users", {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers
+  }).then(res => res.json());
 }

@@ -1,22 +1,19 @@
-import { takeEvery, call, put, select } from "redux-saga/effects";
+import { call, put, select } from "redux-saga/effects";
 import {
   addStory as addStoryToStore,
   updateStory as updateStoryInStore,
   deleteStory as deleteStoryFromStore
-} from "./stores/stories";
-import { addStory, removeStory } from "./components/storyList";
+} from "../stores/stories";
+import { addStory, removeStory } from "../components/storyList";
 import {
-  API_CREATE_STORY,
   apiCallToCreateStory,
   apiCallToUpdateStory,
-  API_UPDATE_STORY,
-  API_DELETE_STORY,
   apiCallToDeleteStory
-} from "./api";
+} from "../api";
 
 const getUserId = state => state.user.id;
 
-function* createStory(action) {
+export function* createStory(action) {
   try {
     const id = yield select(getUserId);
     const response = yield call(
@@ -30,7 +27,7 @@ function* createStory(action) {
   }
 }
 
-function* updateStory(action) {
+export function* updateStory(action) {
   try {
     const response = yield call(apiCallToUpdateStory, action.payload);
     yield put(updateStoryInStore(response, action.payload.id));
@@ -39,7 +36,7 @@ function* updateStory(action) {
   }
 }
 
-function* deleteStory(action) {
+export function* deleteStory(action) {
   try {
     yield call(apiCallToDeleteStory, action.payload);
     // must remove story from storyList first, then remove it from the store
@@ -48,12 +45,6 @@ function* deleteStory(action) {
   } catch (error) {
     yield put({ type: "DELETE_STORY_SUCCESS_FAILURE", error });
   }
-}
-
-export default function* rootSaga() {
-  yield takeEvery(API_CREATE_STORY, createStory);
-  yield takeEvery(API_UPDATE_STORY, updateStory);
-  yield takeEvery(API_DELETE_STORY, deleteStory);
 }
 
 /*

@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Button from "../~library/Button";
 import TextInput from "../~library/TextInput";

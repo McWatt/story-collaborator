@@ -1,76 +1,92 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import Button from '../~library/Button';
-import { updateToLoggedInStatus } from '../user';
+import React, { Component } from "react";
+import { withRouter, Link } from "react-router-dom";
+import { connect } from "react-redux";
+import Button from "../~library/Button";
+import { authLoginRequest } from "../../state/authentication/actions";
+import { testEmailConstraints } from "../../utils/test-email-constraints";
+import { testPasswordConstraints } from "../../utils/test-password-constraints";
 
 class Login extends Component {
-    constructor(props) {
-        super(props);
+  state = {
+    email: "",
+    password: ""
+  };
 
-        this.state = {
-            email: '',
-            password: ''
-        };
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+  render() {
+    const { email, password } = this.state;
+    const isPasswordValid = testPasswordConstraints(password).isLongEnough;
+    const isEmailValid = testEmailConstraints(email);
+    const isValid = isPasswordValid && isEmailValid;
 
-    handleChange(event) {
-        this.setState({[event.target.name]: event.target.value});
-    }
-
-    handleSubmit(event) {
-        // TODO: hard-coded values should be returned from api on success
-        this.props.dispatch(updateToLoggedInStatus({
-            name: 'erik.phipps',
-            id: 9879879
-        }));
-
-        // TODO: redirect to homepage on success
-        this.props.history.push('/');
-
-        event.preventDefault();
-    }
-
-    render() {
-        const { email, password } = this.state;
-        const isValid = email.length > 0 && password.length > 0;
-
-        return (
-            <div>
-                <header>
-                    <h1>Login</h1>
-                </header>
-                <form>
-                    <label>
-                            Email:
-                            <input
-                            name="email"
-                            type="email"
-                            value={this.state.email}
-                            onChange={this.handleChange} />
-                        </label>
-                    <br />
-                    <label>
-                        Password:
-                            <input
-                            name="password"
-                            type="password"
-                            value={this.state.password}
-                            onChange={this.handleChange} />
-                    </label>
-                    <Button type="button" disabled={!isValid} onClick={this.handleSubmit}>Login</Button>
-                </form >
-            </div>
-        );
-    }
+    return (
+      <div>
+        <header>
+          <h1>Login</h1>
+        </header>
+        <form>
+          <label>
+            Email: {isEmailValid ? "v" : "x"}
+            <input
+              name="email"
+              type="email"
+              value={this.state.email}
+              onChange={this.handleChange}
+              autoComplete="email"
+            />
+          </label>
+          <br />
+          <label>
+            Password: {isPasswordValid ? "v" : "x"}
+            <input
+              name="password"
+              type="password"
+              value={this.state.password}
+              onChange={this.handleChange}
+              autoComplete="current-password"
+            />
+          </label>
+          <Button
+            type="button"
+            disabled={!isValid}
+            onClick={() =>
+              this.props.handleSubmit(
+                this.state.email,
+                this.state.password,
+                this.props.history
+              )
+            }
+          >
+            Login
+          </Button>
+          <div>
+            No login? <Link to="/register">Create an account!</Link>
+          </div>
+        </form>
+      </div>
+    );
+  }
 }
 
-// function mapStateToProps(state, props) {
-//     return {
-//         story: state.user.id
-//     };
-// }
+function mapStateToProps(state) {
+  return {
+    user: state.user
+  };
+}
 
-export default connect()(Login);
+function mapDispatchToProps(dispatch) {
+  return {
+    handleSubmit: (email, password, history) =>
+      dispatch(authLoginRequest(email, password, history))
+  };
+}
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Login)
+);

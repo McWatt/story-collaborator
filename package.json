@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:3009/",
   "dependencies": {
+    "jwt-decode": "^2.2.0",
     "node-json-db": "^0.7.5",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",

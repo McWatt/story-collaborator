@@ -1,46 +1,70 @@
-import loginStatus from './utils/login-status';
+import jwt_decode from "jwt-decode";
+import { getJwt, authString } from "./utils/jwt";
 
 const initState = {
-    // user: {
-    //     name: 'erik.phipps',
-    //     createdStories: [1234, 1235, 1236],
-    //     collaboratedStories: [1237, 1238, 1239]
-    // },
-    user: {
-        name: 'Guest',
-        createdStories: [],
-        collaboratedStories: [],
-        id: 0
-    },
-    stories: {}
+  app: {
+    apiPath: "http://localhost:3009/api/v1/"
+  },
+  authentication: {
+    jwt: "",
+    status: "unauthenticated"
+  },
+  user: {
+    name: "",
+    email: "",
+    userId: null
+  },
+  stories: {}
+};
+
+const jwt = getJwt();
+
+if (jwt) {
+  const decodedToken = jwt_decode(jwt);
+  initState.authentication.jwt = jwt;
+  initState.authentication.status = "authenticated";
+  initState.user.name = decodedToken.fullName;
+  initState.user.email = decodedToken.email;
+  initState.user.userId = decodedToken._id;
 }
 
-// add user status
-initState.user = Object.assign(initState.user, loginStatus());
-
 export default new Promise((resolve, reject) => {
-    fetch('/api/v1/stories')
-        .then(response => {
-            return response.json();
-        })
-        .catch(error => {
-            reject(Error("It broke"));
-        })
-        .then(stories => {
-            initState.stories = stories.reduce((acc, item) => {
-                acc[item._id] = {
-                    title: item.title,
-                    content: item.content,
-                    id: item._id,
-                    description: item.description,
-                }
-                return acc;
-            }, {});
+  const headers = new Headers({
+    Authorization: authString(),
+    "Content-Type": "application/json"
+  });
 
-            initState.storyList = {
-                ids: Object.keys(initState.stories)
-            }
+  fetch("http://localhost:3009/api/v1/stories", {
+    method: "GET",
+    headers
+  })
+    .then(response => {
+      if (response.status === 401) {
+        reject("unauthorized");
+      } else {
+        return response.json();
+      }
+    })
+    .catch(error => {
+      reject(Error("It broke"));
+    })
+    .then(stories => {
+      if (stories) {
+        initState.stories = stories.reduce((acc, item) => {
+          acc[item._id] = {
+            title: item.title,
+            content: item.content,
+            id: item._id,
+            description: item.description
+          };
+          return acc;
+        }, {});
 
-            resolve(initState);
-        });
+        initState.storyList = {
+          ids: Object.keys(initState.stories)
+        };
+      }
+
+      resolve(initState);
+    });
 });
