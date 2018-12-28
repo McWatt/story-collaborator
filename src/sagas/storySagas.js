@@ -1,10 +1,13 @@
 import { call, put, select } from "redux-saga/effects";
 import {
-  addStory as addStoryToStore,
-  updateStory as updateStoryInStore,
-  deleteStory as deleteStoryFromStore
-} from "../stores/stories";
-import { addStory, removeStory } from "../components/storyList";
+  storiesAddStory,
+  storiesUpdateStory,
+  storiesDeleteStory
+} from "../state/stories/actions";
+import {
+  storyListAddStory,
+  storyListRemoveStory
+} from "../state/storyList/actions";
 import {
   apiCallToCreateStory,
   apiCallToUpdateStory,
@@ -12,16 +15,19 @@ import {
 } from "../api";
 
 const getUserId = state => state.user.id;
+const getToken = state => state.authentication.jwt;
 
 export function* createStory(action) {
   try {
+    const token = yield select(getToken);
     const id = yield select(getUserId);
     const response = yield call(
       apiCallToCreateStory,
-      Object.assign(action.payload, { author_id: id })
+      Object.assign(action.payload, { author_id: id }),
+      token
     );
-    yield put(addStoryToStore(response, id));
-    yield put(addStory(id));
+    yield put(storiesAddStory(response, id));
+    yield put(storyListAddStory(id));
   } catch (error) {
     yield put({ type: "CREATE_STORY_SUCCESS_FAILURE", error });
   }
@@ -29,8 +35,9 @@ export function* createStory(action) {
 
 export function* updateStory(action) {
   try {
-    const response = yield call(apiCallToUpdateStory, action.payload);
-    yield put(updateStoryInStore(response, action.payload.id));
+    const token = yield select(getToken);
+    const response = yield call(apiCallToUpdateStory, action.payload, token);
+    yield put(storiesUpdateStory(response, action.payload.id));
   } catch (error) {
     yield put({ type: "UPDATE_STORY_SUCCESS_FAILURE", error });
   }
@@ -38,10 +45,11 @@ export function* updateStory(action) {
 
 export function* deleteStory(action) {
   try {
-    yield call(apiCallToDeleteStory, action.payload);
+    const token = yield select(getToken);
+    yield call(apiCallToDeleteStory, action.payload, token);
     // must remove story from storyList first, then remove it from the store
-    yield put(removeStory(action.payload));
-    yield put(deleteStoryFromStore(action.payload));
+    yield put(storyListRemoveStory(action.payload));
+    yield put(storiesDeleteStory(action.payload));
   } catch (error) {
     yield put({ type: "DELETE_STORY_SUCCESS_FAILURE", error });
   }

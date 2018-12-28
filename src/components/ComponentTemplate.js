@@ -1,109 +1,115 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import Button from '../~library/Button';
-import TextInput from '../~library/TextInput';
-import Textarea from '../~library/Textarea';
-import { apiUpdateStory } from '../../api';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import Button from "../~library/Button";
+import TextInput from "../~library/TextInput";
+import Textarea from "../~library/Textarea";
+import { apiUpdateStory } from "../../api";
 
 class Story extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        const { title, content } = this.props.story;
+    const { title, content } = this.props.story;
 
-        this.state = {
-            content: content,
-            title: title,
-            activeParagraph: 0,
-        };
+    this.state = {
+      content: content,
+      title: title,
+      activeParagraph: 0
+    };
 
-        this.handleContentChange = this.handleContentChange.bind(this);
-        this.handleParagraphDelete = this.handleParagraphDelete.bind(this);
-        this.handleParagraphAdd = this.handleParagraphAdd.bind(this);
-        this.handleParagraphKeyUp = this.handleParagraphKeyUp.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleContentChange = this.handleContentChange.bind(this);
+    this.handleParagraphDelete = this.handleParagraphDelete.bind(this);
+    this.handleParagraphAdd = this.handleParagraphAdd.bind(this);
+    this.handleParagraphKeyUp = this.handleParagraphKeyUp.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
-        this.titleInput = React.createRef();
+    this.titleInput = React.createRef();
 
-        this.dom = {};
+    this.dom = {};
 
-        this.shouldFocusParagraph = false;
+    this.shouldFocusParagraph = false;
+  }
+
+  handleContentChange(event) {
+    let contentCopy = [...this.state.content];
+
+    contentCopy[event.target.dataset.key] = event.target.value;
+    this.setState({ content: contentCopy });
+  }
+
+  handleParagraphDelete(event) {
+    let contentCopy = [...this.state.content];
+
+    this.setState({
+      content: contentCopy.filter(
+        (item, index) => index !== Number(event.target.dataset.key)
+      )
+    });
+  }
+
+  handleParagraphKeyUp(event) {
+    const key = Number(event.target.dataset.key);
+
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      this.handleParagraphAdd(event);
+      this.setState({
+        activeParagraph: key + 1
+      });
+      this.shouldFocusParagraph = true;
+    } else if (event.keyCode === 8 && event.target.value.length === 0) {
+      this.handleParagraphDelete(event);
+      this.setState({
+        activeParagraph: key - 1
+      });
+      this.shouldFocusParagraph = true;
+    } else {
+      return false;
     }
+  }
 
-    handleContentChange(event) {
-        let contentCopy = [...this.state.content];
+  handleParagraphAdd(event) {
+    let contentCopy = [...this.state.content];
+    let key = Number(event.target.dataset.key);
+    let index =
+      typeof key === "number" && !isNaN(key)
+        ? key + 1
+        : this.state.content.length;
 
-        contentCopy[event.target.dataset.key] = event.target.value;
-        this.setState({ content: contentCopy });
-    }
+    contentCopy.splice(index, 0, "");
 
-    handleParagraphDelete(event) {
-        let contentCopy = [...this.state.content];
+    this.setState(() => ({ content: contentCopy }));
+  }
 
-        this.setState({
-            content: contentCopy.filter((item, index) => index !== Number(event.target.dataset.key))
-        });
-    }
+  handleChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
 
-    handleParagraphKeyUp(event) {
-        const key = Number(event.target.dataset.key);
+  handleSubmit() {
+    this.props.dispatch(
+      apiUpdateStory({
+        title: this.state.title,
+        content: this.state.content,
+        id: this.props.story.id
+      })
+    );
+  }
 
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            this.handleParagraphAdd(event);
-            this.setState({
-                activeParagraph: key + 1,
-            });
-            this.shouldFocusParagraph = true;
-        } else if (event.keyCode === 8 && event.target.value.length === 0) {
-            this.handleParagraphDelete(event);
-            this.setState({
-                activeParagraph: key - 1,
-            });
-            this.shouldFocusParagraph = true;
-        } else {
-            return false;
-        }
-    }
+  componentDidUpdate() {
+    console.log("componentDidUpdate");
 
-    handleParagraphAdd(event) {
-        let contentCopy = [...this.state.content];
-        let key = Number(event.target.dataset.key);
-        let index = (typeof key === 'number' && !isNaN(key)) ? key + 1 : this.state.content.length;
+    // if (this.shouldFocusParagraph) {
+    //     this.dom[`paragraphy-${this.state.activeParagraph}`].focus();
+    //     this.shouldFocusParagraph = false;
+    // }
+  }
 
-        contentCopy.splice(index, 0, '');
-
-        this.setState(() => ({ content: contentCopy }));
-    }
-
-    handleChange(event) {
-        this.setState({ [event.target.name]: event.target.value });
-    }
-
-    handleSubmit() {
-        this.props.dispatch(apiUpdateStory({
-            title: this.state.title,
-            content: this.state.content,
-            id: this.props.story.id,
-        }));
-    }
-
-    componentDidUpdate() {
-        console.log('componentDidUpdate');
-
-        // if (this.shouldFocusParagraph) {
-        //     this.dom[`paragraphy-${this.state.activeParagraph}`].focus();
-        //     this.shouldFocusParagraph = false;
-        // }
-
-    }
-
-    componentDidMount() {
-        this.titleInput.current.focus();
-    }
-    /*
+  componentDidMount() {
+    this.titleInput.current.focus();
+  }
+  /*
         componentDidMount() {
             console.group('componentDidMount');
             console.log('invoked immediately after a component is mounted (inserted into the tree)');
@@ -149,67 +155,68 @@ class Story extends Component {
             console.groupEnd();
         }
     */
-    render() {
-        console.log(React);
-        const paragraphs = this.state.content.map((item, idx) => {
-            return (
-                <div key={idx} >
-                    <Textarea
-                        data-key={idx}
-                        onChange={this.handleContentChange}
-                        onKeyDown={this.handleParagraphKeyUp}
-                        value={item}
-                        innerRef={(input) => { this.dom[`paragraphy-${idx}`] = input }}
-                        autoFocus={this.state.activeParagraph === idx ? true : false}
-                    ></Textarea>
-                    <Button
-                        type="button"
-                        onClick={this.handleParagraphDelete}
-                        data-key={idx}
-                    >X</Button>
-                </div>
-            );
-        });
+  render() {
+    console.log(React);
+    const paragraphs = this.state.content.map((item, idx) => {
+      return (
+        <div key={idx}>
+          <Textarea
+            data-key={idx}
+            onChange={this.handleContentChange}
+            onKeyDown={this.handleParagraphKeyUp}
+            value={item}
+            innerRef={input => {
+              this.dom[`paragraphy-${idx}`] = input;
+            }}
+            autoFocus={this.state.activeParagraph === idx ? true : false}
+          />
+          <Button
+            type="button"
+            onClick={this.handleParagraphDelete}
+            data-key={idx}
+          >
+            X
+          </Button>
+        </div>
+      );
+    });
 
-        return (
-            <div>
-                <MouseTracker />
-                <header>
-                    <h1>Edit: </h1>
-                    <TextInput
-                        type='text'
-                        name='title'
-                        defaultValue={this.props.story.title}
-                        onChange={this.handleChange}
-                        innerRef={this.titleInput}
-                    />
-                </header>
-                {paragraphs}
-                <Button
-                    type="button"
-                    onClick={this.handleSubmit}
-                >Save</Button>
-                <Button
-                    type="button"
-                    onClick={this.handleParagraphAdd}
-                >+</Button>
-            </div>
-        );
-    }
+    return (
+      <div>
+        <MouseTracker />
+        <header>
+          <h1>Edit: </h1>
+          <TextInput
+            type="text"
+            name="title"
+            defaultValue={this.props.story.title}
+            onChange={this.handleChange}
+            innerRef={this.titleInput}
+          />
+        </header>
+        {paragraphs}
+        <Button type="button" onClick={this.handleSubmit}>
+          Save
+        </Button>
+        <Button type="button" onClick={this.handleParagraphAdd}>
+          +
+        </Button>
+      </div>
+    );
+  }
 }
 
 Story.propTypes = {
-    story: PropTypes.shape({
-        title: PropTypes.string,
-        content: PropTypes.arrayOf(PropTypes.string)
-    })
-}
+  story: PropTypes.shape({
+    title: PropTypes.string,
+    content: PropTypes.arrayOf(PropTypes.string)
+  })
+};
 
 function mapStateToProps(state, props) {
-    return {
-        story: state.stories[props.match.params.id]
-    };
+  return {
+    story: state.storiesById[props.match.params.id]
+  };
 }
 
 export default connect(mapStateToProps)(Story);
-

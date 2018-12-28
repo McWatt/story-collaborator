@@ -5,7 +5,7 @@ import Button from "../~library/Button";
 import Textarea from "../~library/Textarea";
 import TextInput from "../~library/TextInput";
 import { connect } from "react-redux";
-import { apiCreateStory } from "../../api";
+import { storiesApiCreateStory } from "../../state/stories/actions";
 
 type Props = {
   dispatch: Function
@@ -29,7 +29,7 @@ class AddStory extends Component<Props, State> {
   handleSubmit = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault();
     this.props.dispatch(
-      apiCreateStory({
+      storiesApiCreateStory({
         title: this.state.title,
         description: this.state.description
       })

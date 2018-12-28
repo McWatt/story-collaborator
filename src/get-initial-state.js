@@ -14,7 +14,7 @@ const initState = {
     email: "",
     userId: null
   },
-  stories: {}
+  storiesById: {}
 };
 
 const jwt = getJwt();
@@ -50,7 +50,7 @@ export default new Promise((resolve, reject) => {
     })
     .then(stories => {
       if (stories) {
-        initState.stories = stories.reduce((acc, item) => {
+        initState.storiesById = stories.reduce((acc, item) => {
           acc[item._id] = {
             title: item.title,
             content: item.content,
@@ -61,7 +61,7 @@ export default new Promise((resolve, reject) => {
         }, {});
 
         initState.storyList = {
-          ids: Object.keys(initState.stories)
+          ids: Object.keys(initState.storiesById)
         };
       }
 

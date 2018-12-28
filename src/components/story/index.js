@@ -30,7 +30,7 @@ class Story extends Component<Props> {
 
 function mapStateToProps(state, props) {
   return {
-    story: state.stories[props.match.params.id]
+    story: state.storiesById[props.match.params.id]
   };
 }
 

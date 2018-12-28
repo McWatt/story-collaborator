@@ -1,5 +1,9 @@
 import { takeEvery } from "redux-saga/effects";
-import { API_CREATE_STORY, API_UPDATE_STORY, API_DELETE_STORY } from "../api";
+import {
+  STORIES_API_CREATE_STORY,
+  STORIES_API_UPDATE_STORY,
+  STORIES_API_DELETE_STORY
+} from "../state/stories/actions";
 import { createStory, updateStory, deleteStory } from "./storySagas";
 import {
   AUTH_LOGIN_REQUEST,
@@ -13,9 +17,9 @@ import {
 } from "./authenticationSagas";
 
 export default function* rootSaga() {
-  yield takeEvery(API_CREATE_STORY, createStory);
-  yield takeEvery(API_UPDATE_STORY, updateStory);
-  yield takeEvery(API_DELETE_STORY, deleteStory);
+  yield takeEvery(STORIES_API_CREATE_STORY, createStory);
+  yield takeEvery(STORIES_API_UPDATE_STORY, updateStory);
+  yield takeEvery(STORIES_API_DELETE_STORY, deleteStory);
   yield takeEvery(AUTH_LOGIN_REQUEST, loginRequest);
   yield takeEvery(AUTH_LOGOUT_REQUEST, logoutRequest);
   yield takeEvery(AUTH_REGISTRATION_REQUEST, registrationRequest);

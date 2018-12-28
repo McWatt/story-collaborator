@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Button from "../~library/Button";
 import TextInput from "../~library/TextInput";
 import Textarea from "../~library/Textarea";
-import { apiUpdateStory } from "../../api";
+import { storiesApiUpdateStory } from "../../state/stories/actions";
 import { withRouter } from "react-router-dom";
 
 type Props = {
@@ -108,7 +108,7 @@ class Story extends Component<Props, State> {
 
   handleSubmit = () => {
     this.props.dispatch(
-      apiUpdateStory({
+      storiesApiUpdateStory({
         title: this.state.title,
         content: this.state.content,
         id: this.props.story.id,
@@ -191,7 +191,7 @@ class Story extends Component<Props, State> {
 
 function mapStateToProps(state, props) {
   return {
-    story: state.stories[props.match.params.id]
+    story: state.storiesById[props.match.params.id]
   };
 }
 

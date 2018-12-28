@@ -2,45 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Button from "../~library/Button";
-import { apiDeleteStory } from "../../api";
-
-export const ADD_STORY = "StoryList/ADD_STORY";
-export const REMOVE_STORY = "StoryList/REMOVE_STORY";
-
-export const addStory = id => {
-  return {
-    type: ADD_STORY,
-    payload: id
-  };
-};
-export const removeStory = id => {
-  return {
-    type: REMOVE_STORY,
-    payload: id
-  };
-};
-
-// storyList reducer
-export const storyListReducer = (state = { ids: [] }, action) => {
-  switch (action.type) {
-    case ADD_STORY:
-      return Object.assign({}, state, {
-        ids: state.ids.concat(action.payload)
-      });
-    case REMOVE_STORY:
-      return Object.assign({}, state, {
-        ids: state.ids.filter(id => action.payload !== id)
-      });
-    default:
-      return state;
-  }
-};
+import { storiesApiDeleteStory } from "../../state/stories/actions";
+import { getStoryById } from "../../state/stories/selectors";
 
 class Stories extends Component {
-  handleDelete = id => event => {
-    this.props.dispatch(apiDeleteStory(id));
-  };
-
   render() {
     const storyList = Object.values(this.props.stories).map((item, idx) => {
       return (
@@ -49,7 +14,10 @@ class Stories extends Component {
           <div>{item.description}</div>
           <Link to={`/stories/${item.id}`}>View</Link> |{" "}
           <Link to={`/stories/${item.id}/edit`}>Edit</Link> |
-          <Button type="button" onClick={this.handleDelete(item.id)}>
+          <Button
+            type="button"
+            onClick={() => this.props.handleDelete(item.id)}
+          >
             Delete
           </Button>
         </li>
@@ -67,8 +35,17 @@ class Stories extends Component {
 
 function mapStateToProps(state) {
   return {
-    stories: state.storyList.ids.map(id => state.stories[id])
+    stories: state.storyList.ids.map(id => getStoryById(id, state))
   };
 }
 
-export default connect(mapStateToProps)(Stories);
+function mapDispatchToProps(dispatch) {
+  return {
+    handleDelete: id => dispatch(storiesApiDeleteStory(id))
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Stories);
