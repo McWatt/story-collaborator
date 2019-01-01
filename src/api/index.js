@@ -11,6 +11,17 @@ const createGuestHeaders = () => {
   });
 };
 
+export function apiCallToGetUserStories(userId, token) {
+  const headers = new Headers({
+    Authorization: `Bearer ${token}`
+  });
+
+  return fetch(`http://127.0.0.1:3009/api/v1/stories?userId=${userId}`, {
+    method: "GET",
+    headers
+  }).then(res => res.json());
+}
+
 export function apiCallToCreateStory(data, token) {
   return fetch("http://127.0.0.1:3009/api/v1/stories/", {
     method: "POST",

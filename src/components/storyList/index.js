@@ -2,10 +2,18 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Button from "../~library/Button";
-import { storiesApiDeleteStory } from "../../state/stories/actions";
+import {
+  storiesApiDeleteStory,
+  storiesApiGetStoryList
+} from "../../state/stories/actions";
 import { getStoryById } from "../../state/stories/selectors";
+import { getUserId } from "../../state/user/selectors";
 
 class Stories extends Component {
+  componentDidMount() {
+    this.props.getStoriesList(this.props.userId);
+  }
+
   render() {
     const storyList = Object.values(this.props.stories).map((item, idx) => {
       return (
@@ -35,13 +43,15 @@ class Stories extends Component {
 
 function mapStateToProps(state) {
   return {
-    stories: state.storyList.ids.map(id => getStoryById(id, state))
+    stories: state.storyList.ids.map(id => getStoryById(id, state)),
+    userId: getUserId(state)
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    handleDelete: id => dispatch(storiesApiDeleteStory(id))
+    handleDelete: id => dispatch(storiesApiDeleteStory(id)),
+    getStoriesList: userId => dispatch(storiesApiGetStoryList(userId))
   };
 }
 

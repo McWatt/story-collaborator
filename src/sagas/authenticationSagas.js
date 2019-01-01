@@ -4,7 +4,7 @@ import {
   authUpdateJwtToken,
   authUpdateUserStatus
 } from "../state/authentication/actions";
-import { userUpdateNameAndEmail, userReset } from "../state/user/actions";
+import { userUpdateNameAndEmail } from "../state/user/actions";
 import { setJwt, clearJwt } from "../utils/jwt";
 import jwt_decode from "jwt-decode";
 import { apiCallToAuthenticateUser, apiCallToRegisterUser } from "../api/index";
@@ -32,7 +32,7 @@ export function* loginRequest(action) {
 
 export function* logoutRequest() {
   yield clearJwt();
-  yield put(userReset());
+  window.location.reload();
 }
 
 export function* registrationRequest(action) {
