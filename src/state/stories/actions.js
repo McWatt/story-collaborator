@@ -9,6 +9,7 @@ export const STORIES_API_UPDATE_STORY = "STORIES_API_UPDATE_STORY";
 export const STORIES_API_DELETE_STORY = "STORIES_API_DELETE_STORY";
 // export const STORIES_API_DELETE_STORY_SUCCESS_FAILURE = 'STORIES_API_DELETE_STORY_SUCCESS_FAILURE';
 export const STORIES_API_GET_STORY_LIST = "STORIES_API_GET_STORY_LIST";
+export const STORIES_API_GET_STORY = "STORIES_API_GET_STORY";
 
 export const storiesApiGetStoryList = userId => {
   return {
@@ -19,7 +20,15 @@ export const storiesApiGetStoryList = userId => {
   };
 };
 
-// Action creators
+export const storiesApiGetStory = storyId => {
+  return {
+    type: STORIES_API_GET_STORY,
+    payload: {
+      storyId
+    }
+  };
+};
+
 export const storiesApiCreateStory = data => {
   return {
     type: STORIES_API_CREATE_STORY,

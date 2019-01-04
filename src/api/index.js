@@ -22,6 +22,13 @@ export function apiCallToGetUserStories(userId, token) {
   }).then(res => res.json());
 }
 
+export function apiCallToGetStory(storyId, token) {
+  return fetch(`http://127.0.0.1:3009/api/v1/stories/${storyId}`, {
+    method: "GET",
+    headers: createAuthHeaders(token)
+  }).then(res => res.json());
+}
+
 export function apiCallToCreateStory(data, token) {
   return fetch("http://127.0.0.1:3009/api/v1/stories/", {
     method: "POST",

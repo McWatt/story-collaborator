@@ -5,7 +5,10 @@ import { connect } from "react-redux";
 import Button from "../~library/Button";
 import TextInput from "../~library/TextInput";
 import Textarea from "../~library/Textarea";
-import { storiesApiUpdateStory } from "../../state/stories/actions";
+import {
+  storiesApiUpdateStory,
+  storiesApiGetStory
+} from "../../state/stories/actions";
 import { withRouter } from "react-router-dom";
 
 type Props = {
@@ -24,7 +27,8 @@ type State = {
   content: Array<mixed>,
   title: string,
   description: string,
-  activeParagraph: number
+  activeParagraph: number,
+  dataFetched: boolean
 };
 
 class Story extends Component<Props, State> {
@@ -33,17 +37,18 @@ class Story extends Component<Props, State> {
   };
   dom: {};
   shouldFocusParagraph: boolean;
+  addPropsToState: Function;
+  checkDataFetched: Function;
 
   constructor(props) {
     super(props);
 
-    const { title, content, description } = this.props.story;
-
     this.state = {
-      content: content,
-      title: title,
-      description: description,
-      activeParagraph: 0
+      content: [],
+      title: "",
+      description: "",
+      activeParagraph: 0,
+      dataFetched: false
     };
 
     this.titleInput = React.createRef();
@@ -107,25 +112,45 @@ class Story extends Component<Props, State> {
   };
 
   handleSubmit = () => {
-    this.props.dispatch(
-      storiesApiUpdateStory({
-        title: this.state.title,
-        content: this.state.content,
-        id: this.props.story.id,
-        description: this.state.description
-      })
-    );
+    this.props.handleSubmit({
+      title: this.state.title,
+      content: this.state.content,
+      id: this.props.story.id,
+      description: this.state.description
+    });
   };
 
   handleCancel = () => {
     this.props.history.push("/stories");
   };
 
+  addPropsToState = () => {
+    const { title, content, description } = this.props.story;
+
+    this.setState({
+      content: content,
+      title: title,
+      description: description,
+      activeParagraph: 0
+    });
+  };
+
+  checkDataFetched = () => {
+    if (!this.state.dataFetched && this.props.story) {
+      this.setState({ dataFetched: true });
+    }
+  };
+
   componentDidMount() {
-    this.titleInput.current.focus();
+    this.checkDataFetched();
+    if (!this.props.story) {
+      this.props.getStory(this.props.storyId);
+    }
   }
 
   componentDidUpdate() {
+    this.checkDataFetched();
+
     if (this.shouldFocusParagraph) {
       this.dom[`paragraphy-${this.state.activeParagraph}`].focus();
       this.shouldFocusParagraph = false;
@@ -133,6 +158,10 @@ class Story extends Component<Props, State> {
   }
 
   render() {
+    if (!this.state.dataFetched) {
+      return <div>Loading....</div>;
+    }
+
     const paragraphs = this.state.content.map((item, idx) => {
       return (
         <div key={idx}>
@@ -141,7 +170,7 @@ class Story extends Component<Props, State> {
             onChange={this.handleContentChange}
             onKeyDown={this.handleParagraphKeyUp}
             value={item}
-            innerRef={input => {
+            ref={input => {
               this.dom[`paragraphy-${idx}`] = input;
             }}
           />
@@ -165,7 +194,7 @@ class Story extends Component<Props, State> {
             name="title"
             defaultValue={this.props.story.title}
             onChange={this.handleChange}
-            innerRef={this.titleInput}
+            ref={this.titleInput}
           />
         </header>
         <Textarea
@@ -190,10 +219,24 @@ class Story extends Component<Props, State> {
 }
 
 function mapStateToProps(state, props) {
-  debugger;
+  const storyId = props.match.params.id;
+
   return {
-    story: state.storiesById[props.match.params.id]
+    story: state.storiesById[storyId],
+    storyId
   };
 }
 
-export default withRouter(connect(mapStateToProps)(Story));
+function mapDispatchToProps(dispatch) {
+  return {
+    getStory: storyId => dispatch(storiesApiGetStory(storyId)),
+    handleSubmit: payload => dispatch(storiesApiUpdateStory(payload))
+  };
+}
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Story)
+);

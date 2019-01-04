@@ -14,7 +14,8 @@ import {
   apiCallToCreateStory,
   apiCallToUpdateStory,
   apiCallToDeleteStory,
-  apiCallToGetUserStories
+  apiCallToGetUserStories,
+  apiCallToGetStory
 } from "../api";
 
 const getUserId = state => state.user.userId;
@@ -38,6 +39,22 @@ export function* getStories(action) {
     const id = yield select(getUserId);
     const response = yield call(apiCallToGetUserStories, id, token);
     const storiesById = mapStories(response);
+    yield put(storiesAddStories(storiesById));
+    yield put(storyListAddStories(Object.keys(storiesById)));
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export function* getStory(action) {
+  try {
+    const token = yield select(getToken);
+    const response = yield call(
+      apiCallToGetStory,
+      action.payload.storyId,
+      token
+    );
+    const storiesById = mapStories([response]);
     yield put(storiesAddStories(storiesById));
     yield put(storyListAddStories(Object.keys(storiesById)));
   } catch (err) {
