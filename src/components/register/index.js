@@ -5,6 +5,7 @@ import Button from "../~library/Button";
 import { authRegistrationRequest } from "../../state/authentication/actions";
 import { testPasswordConstraints } from "../../utils/test-password-constraints";
 import { testEmailConstraints } from "../../utils/test-email-constraints";
+import { userGet } from "../../state/user/selectors";
 
 class Register extends Component {
   state = {
@@ -112,9 +113,7 @@ class Register extends Component {
 }
 
 function mapStateToProps(state, props) {
-  return {
-    user: state.user
-  };
+  return { user: userGet(state) };
 }
 
 function mapDispatchToProps(dispatch) {

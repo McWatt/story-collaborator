@@ -17,9 +17,8 @@ import {
   apiCallToGetUserStories,
   apiCallToGetStory
 } from "../api";
-
-const getUserId = state => state.user.userId;
-const getToken = state => state.authentication.jwt;
+import { userGetId } from "../state/user/selectors";
+import { authenticationGetJwt } from "../state/authentication/selectors";
 
 const mapStories = storiesFromApi => {
   return storiesFromApi.reduce((acc, item) => {
@@ -35,8 +34,8 @@ const mapStories = storiesFromApi => {
 
 export function* getStories(action) {
   try {
-    const token = yield select(getToken);
-    const id = yield select(getUserId);
+    const token = yield select(authenticationGetJwt);
+    const id = yield select(userGetId);
     const response = yield call(apiCallToGetUserStories, id, token);
     const storiesById = mapStories(response);
     yield put(storiesAddStories(storiesById));
@@ -48,7 +47,7 @@ export function* getStories(action) {
 
 export function* getStory(action) {
   try {
-    const token = yield select(getToken);
+    const token = yield select(authenticationGetJwt);
     const response = yield call(
       apiCallToGetStory,
       action.payload.storyId,
@@ -64,8 +63,8 @@ export function* getStory(action) {
 
 export function* createStory(action) {
   try {
-    const token = yield select(getToken);
-    const id = yield select(getUserId);
+    const token = yield select(authenticationGetJwt);
+    const id = yield select(userGetId);
     const response = yield call(
       apiCallToCreateStory,
       Object.assign(action.payload, { author_id: id }),
@@ -80,7 +79,7 @@ export function* createStory(action) {
 
 export function* updateStory(action) {
   try {
-    const token = yield select(getToken);
+    const token = yield select(authenticationGetJwt);
     const response = yield call(apiCallToUpdateStory, action.payload, token);
     yield put(storiesUpdateStory(response, action.payload.id));
   } catch (error) {
@@ -90,7 +89,7 @@ export function* updateStory(action) {
 
 export function* deleteStory(action) {
   try {
-    const token = yield select(getToken);
+    const token = yield select(authenticationGetJwt);
     yield call(apiCallToDeleteStory, action.payload, token);
     // must remove story from storyList first, then remove it from the store
     yield put(storyListRemoveStory(action.payload));

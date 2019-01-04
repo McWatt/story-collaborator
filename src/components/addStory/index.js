@@ -6,6 +6,7 @@ import Textarea from "../~library/Textarea";
 import TextInput from "../~library/TextInput";
 import { connect } from "react-redux";
 import { storiesApiCreateStory } from "../../state/stories/actions";
+import { userGetId } from "../../state/user/selectors";
 
 type Props = {
   dispatch: Function
@@ -75,7 +76,7 @@ class AddStory extends Component<Props, State> {
 
 const mapPropsToState = (state, props) => {
   return {
-    id: state.user.id
+    id: userGetId(state)
   };
 };
 

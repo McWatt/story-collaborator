@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { appMessageClear } from "../../state/appMessages/actions";
+import { appMessagesGetMessage } from "../../state/appMessages/selectors";
 
 class AppMessages extends Component {
   render() {
@@ -17,9 +18,7 @@ class AppMessages extends Component {
 }
 
 const mapStateToProps = state => {
-  return {
-    message: state.appMessages.message
-  };
+  return { message: appMessagesGetMessage(state) };
 };
 
 const mapDispatchToProps = dispatch => {

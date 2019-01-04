@@ -5,6 +5,7 @@ import Button from "../~library/Button";
 import { authLoginRequest } from "../../state/authentication/actions";
 import { testEmailConstraints } from "../../utils/test-email-constraints";
 import { testPasswordConstraints } from "../../utils/test-password-constraints";
+import { userGet } from "../../state/user/selectors";
 
 class Login extends Component {
   state = {
@@ -73,7 +74,7 @@ class Login extends Component {
 
 function mapStateToProps(state) {
   return {
-    user: state.user
+    user: userGet(state)
   };
 }
 

@@ -6,8 +6,9 @@ import {
   storiesApiDeleteStory,
   storiesApiGetStoryList
 } from "../../state/stories/actions";
-import { getStoryById } from "../../state/stories/selectors";
-import { getUserId } from "../../state/user/selectors";
+import { storyGetByIds } from "../../state/stories/selectors";
+import { userGetId } from "../../state/user/selectors";
+import { storyListGetIds } from "../../state/storyList/selectors";
 
 class Stories extends Component {
   componentDidMount() {
@@ -43,8 +44,8 @@ class Stories extends Component {
 
 function mapStateToProps(state) {
   return {
-    stories: state.storyList.ids.map(id => getStoryById(id, state)),
-    userId: getUserId(state)
+    stories: storyGetByIds(storyListGetIds(state), state),
+    userId: userGetId(state)
   };
 }
 

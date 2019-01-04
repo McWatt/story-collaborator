@@ -2,6 +2,7 @@
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { storyGetById } from "../../state/stories/selectors";
 
 type Props = {
   story: {
@@ -29,9 +30,7 @@ class Story extends Component<Props> {
 }
 
 function mapStateToProps(state, props) {
-  return {
-    story: state.storiesById[props.match.params.id]
-  };
+  return { story: storyGetById(props.match.params.id, state) };
 }
 
 export default connect(mapStateToProps)(Story);

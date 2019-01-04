@@ -18,6 +18,7 @@ import Home from "./components/home";
 import AppMessages from "./components/appMessages";
 import PrivateRoute from "./components/~library/PrivateRoute";
 import { StyledBody, StyledContent, StyledHeader } from "./styled/layout";
+import { authenticationGetStatus } from "./state/authentication/selectors";
 
 const Add = () => (
   <div>
@@ -77,9 +78,7 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  return {
-    authStatus: state.authentication.status
-  };
+  return { authStatus: authenticationGetStatus(state) };
 };
 
 export default connect(mapStateToProps)(App);

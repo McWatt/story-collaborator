@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import StyledLink from "../~library/StyledLink";
 import Button from "../~library/Button";
 import { authLogoutRequest } from "../../state/authentication/actions";
+import { userGet } from "../../state/user/selectors";
 
 class User extends Component {
   render() {
@@ -27,7 +28,7 @@ class User extends Component {
 
 function mapStateToProps(state) {
   return {
-    user: state.user
+    user: userGet(state)
   };
 }
 

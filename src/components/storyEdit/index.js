@@ -10,6 +10,7 @@ import {
   storiesApiGetStory
 } from "../../state/stories/actions";
 import { withRouter } from "react-router-dom";
+import { storyGetById } from "../../state/stories/selectors";
 
 type Props = {
   story: {
@@ -221,10 +222,7 @@ class Story extends Component<Props, State> {
 function mapStateToProps(state, props) {
   const storyId = props.match.params.id;
 
-  return {
-    story: state.storiesById[storyId],
-    storyId
-  };
+  return { story: storyGetById(storyId, state), storyId };
 }
 
 function mapDispatchToProps(dispatch) {
