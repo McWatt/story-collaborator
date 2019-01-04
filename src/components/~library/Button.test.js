@@ -13,6 +13,15 @@ it("renders correctly", () => {
         <Button type="button" primary="true">
           A primary button
         </Button>
+        <Button type="button" danger="true">
+          A danger button
+        </Button>
+        <Button type="button" large>
+          A large button
+        </Button>
+        <Button type="button" danger large>
+          A large, dangerous button
+        </Button>
       </div>
     )
     .toJSON();

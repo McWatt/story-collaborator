@@ -190,6 +190,7 @@ class Story extends Component<Props, State> {
 }
 
 function mapStateToProps(state, props) {
+  debugger;
   return {
     story: state.storiesById[props.match.params.id]
   };

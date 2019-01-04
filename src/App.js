@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { connect } from "react-redux";
-import "./components/~library/globalStyles";
 import "./App.css";
-import styled from "styled-components";
+import { Normalize } from "styled-normalize";
+import { GlobalStyle } from "./styled/global";
 import User from "./components/user";
 import Nav from "./components/nav";
 import StoryList from "./components/storyList";
@@ -17,10 +17,7 @@ import ProfileEdit from "./components/profileEdit";
 import Home from "./components/home";
 import AppMessages from "./components/appMessages";
 import PrivateRoute from "./components/~library/PrivateRoute";
-
-const ContentContainer = styled.section`
-  padding: 1em;
-`;
+import { StyledBody, StyledContent, StyledHeader } from "./styled/layout";
 
 const Add = () => (
   <div>
@@ -32,41 +29,49 @@ const Add = () => (
 class App extends Component {
   render() {
     return (
-      <Router>
-        <div className="App">
-          <header className="App-header">
-            <h1
-              title="Reconstruct stories from the past in a collaborative way."
-              className="App-title"
-            >
-              Story Collaborator
-            </h1>
-            <User />
-          </header>
-          <Nav />
-          <AppMessages />
-          <ContentContainer>
-            <PrivateRoute exact path="/" component={Home} />
-            <PrivateRoute exact path="/stories" component={StoryList} />
-            <PrivateRoute exact path="/stories/:id" component={Story} />
-            <PrivateRoute
-              exact
-              path="/stories/:id/edit"
-              component={StoryEdit}
-            />
-            <PrivateRoute path="/add-story" component={Add} />
-            <PrivateRoute exact path="/profile" component={Profile} />
-            <PrivateRoute exact path="/profile/:username" component={Profile} />
-            <PrivateRoute
-              exact
-              path="/profile/:username/edit"
-              component={ProfileEdit}
-            />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-          </ContentContainer>
-        </div>
-      </Router>
+      <>
+        <Normalize />
+        <GlobalStyle />
+        <Router>
+          <StyledBody className="App">
+            <StyledHeader className="App-header">
+              <h1
+                title="Reconstruct stories from the past in a collaborative way."
+                className="App-title"
+              >
+                Story Collaborator
+              </h1>
+              <User />
+            </StyledHeader>
+            <Nav />
+            <AppMessages />
+            <StyledContent>
+              <PrivateRoute exact path="/" component={Home} />
+              <PrivateRoute exact path="/stories" component={StoryList} />
+              <PrivateRoute exact path="/stories/:id" component={Story} />
+              <PrivateRoute
+                exact
+                path="/stories/:id/edit"
+                component={StoryEdit}
+              />
+              <PrivateRoute path="/add-story" component={Add} />
+              <PrivateRoute exact path="/profile" component={Profile} />
+              <PrivateRoute
+                exact
+                path="/profile/:username"
+                component={Profile}
+              />
+              <PrivateRoute
+                exact
+                path="/profile/:username/edit"
+                component={ProfileEdit}
+              />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/register" component={Register} />
+            </StyledContent>
+          </StyledBody>
+        </Router>
+      </>
     );
   }
 }

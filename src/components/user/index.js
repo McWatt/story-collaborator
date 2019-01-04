@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import StyledLink from "../~library/StyledLink";
+import Button from "../~library/Button";
 import { authLogoutRequest } from "../../state/authentication/actions";
 
 class User extends Component {
@@ -10,11 +11,13 @@ class User extends Component {
         <header>
           {this.props.user.userId ? (
             <>
-              <Link to="/profile">{this.props.user.name}</Link>
-              <button onClick={this.props.handleLogout}>Logout</button>
+              <StyledLink to="/profile">{this.props.user.name}</StyledLink>
+              <Button small onClick={this.props.handleLogout}>
+                Logout
+              </Button>
             </>
           ) : (
-            <Link to="/login">Login</Link>
+            <StyledLink to="/login">Login</StyledLink>
           )}
         </header>
       </div>
