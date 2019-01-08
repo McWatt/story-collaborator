@@ -2,8 +2,12 @@ import { createGlobalStyle } from "styled-components";
 import * as color from "./colors";
 
 export const GlobalStyle = createGlobalStyle`
+  html {
+      box-sizing: border-box;
+  }
+
   * {
-    box-sizing: border-box;
+    box-sizing: inherit;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
     letter-spacing: .5px;
