@@ -1,6 +1,4 @@
-const initState = {
-  apiPath: "http://localhost:3009/api/v1/"
-};
+const initState = {};
 
 export const appReducer = (state = initState, action) => {
   switch (action.type) {

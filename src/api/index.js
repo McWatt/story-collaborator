@@ -1,3 +1,5 @@
+import { apiPath } from "../globals";
+
 const createAuthHeaders = token => {
   return new Headers({
     "Content-Type": "application/json",
@@ -16,21 +18,21 @@ export function apiCallToGetUserStories(userId, token) {
     Authorization: `Bearer ${token}`
   });
 
-  return fetch(`http://127.0.0.1:3009/api/v1/stories?userId=${userId}`, {
+  return fetch(`${apiPath}/stories?userId=${userId}`, {
     method: "GET",
     headers
   }).then(res => res.json());
 }
 
 export function apiCallToGetStory(storyId, token) {
-  return fetch(`http://127.0.0.1:3009/api/v1/stories/${storyId}`, {
+  return fetch(`${apiPath}/stories/${storyId}`, {
     method: "GET",
     headers: createAuthHeaders(token)
   }).then(res => res.json());
 }
 
 export function apiCallToCreateStory(data, token) {
-  return fetch("http://127.0.0.1:3009/api/v1/stories/", {
+  return fetch(`${apiPath}/stories/`, {
     method: "POST",
     body: JSON.stringify(data),
     headers: createAuthHeaders(token)
@@ -38,7 +40,7 @@ export function apiCallToCreateStory(data, token) {
 }
 
 export function apiCallToUpdateStory(data, token) {
-  return fetch(`http://127.0.0.1:3009/api/v1/stories/${data.id}`, {
+  return fetch(`${apiPath}/stories/${data.id}`, {
     method: "PUT",
     body: JSON.stringify(data),
     headers: createAuthHeaders(token)
@@ -46,14 +48,14 @@ export function apiCallToUpdateStory(data, token) {
 }
 
 export function apiCallToDeleteStory(id, token) {
-  return fetch(`http://127.0.0.1:3009/api/v1/stories/${id}`, {
+  return fetch(`${apiPath}/stories/${id}`, {
     method: "DELETE",
     headers: createAuthHeaders(token)
   });
 }
 
 export function apiCallToAuthenticateUser(data) {
-  return fetch("http://127.0.0.1:3009/api/v1/auth/sign_in", {
+  return fetch(`${apiPath}/auth/sign_in`, {
     method: "POST",
     body: JSON.stringify(data),
     headers: createGuestHeaders()
@@ -61,7 +63,7 @@ export function apiCallToAuthenticateUser(data) {
 }
 
 export function apiCallToRegisterUser(data) {
-  return fetch("http://127.0.0.1:3009/api/v1/users", {
+  return fetch(`${apiPath}/users`, {
     method: "POST",
     body: JSON.stringify(data),
     headers: createGuestHeaders()

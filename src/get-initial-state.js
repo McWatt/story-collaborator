@@ -2,9 +2,6 @@ import jwt_decode from "jwt-decode";
 import { getJwt } from "./utils/jwt";
 
 const initState = {
-  app: {
-    apiPath: "http://localhost:3009/api/v1/"
-  },
   authentication: {
     jwt: "",
     status: "unauthenticated"
